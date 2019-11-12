@@ -1,0 +1,17 @@
+.container {
+    text-align: center;
+}
+
+.rotateText {
+    transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+    /* display: block; */
+    /* writing-mode: vertical-rl;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
+}
+
+
+/* .active {
+    border-bottom: 1px solid green;
+} */
