@@ -20,12 +20,17 @@ function getRandNum(limit) {
 }
 
 function startGame() {
+    console.log(that.gameMatrix[0]);
+    // return;
     // console.log(that.gameMatrix);
     // that.gameMatrix[0][0] = 44;
     // return;
 
     let inputs = document.getElementsByTagName("input");
-    that.gameMatrix[0, 0] = getRandNum(100);
+    that.gameMatrix[0][0] = getRandNum(100);
+    console.log(that.gameMatrix[0]);
+    return;
+
     let numDividers = getNumDividers(that.gameMatrix[0, 0]);
     while (numDividers.length < 2) {
         that.gameMatrix[0, 0] = getRandNum(100);
@@ -72,6 +77,8 @@ function startGame() {
     document.getElementById("thirdRowFirstNum").value = that.gameMatrix[2, 0];
     document.getElementById("fifthRowFirstNum").value = that.gameMatrix[4, 0];
     document.getElementById("verticalTotalOne").value = that.gameMatrix[6, 0];
+
+    console.log(that.gameMatrix[0]);
 
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
