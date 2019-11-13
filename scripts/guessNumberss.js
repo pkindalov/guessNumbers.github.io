@@ -1,6 +1,7 @@
 var that = this;
 let startBtn = document.getElementById("startGame");
 let sendBtn = document.getElementById("sendResult");
+let topLimitRandNums = 100;
 
 that.gameMatrix = [
     [0, 'mathChar', 0, 'mathChar', 0, 'mathChar', 0],
@@ -20,20 +21,20 @@ function getRandNum(limit) {
 }
 
 function startGame() {
-    console.log(that.gameMatrix[0]);
+    // console.log(that.gameMatrix[0]);
     // return;
     // console.log(that.gameMatrix);
     // that.gameMatrix[0][0] = 44;
     // return;
 
     let inputs = document.getElementsByTagName("input");
-    that.gameMatrix[0][0] = getRandNum(100);
+    that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
     // console.log(that.gameMatrix[0]);
     // return;
 
     let numDividers = getNumDividers(that.gameMatrix[0, 0]);
-    while (numDividers.length < 2) {
-        that.gameMatrix[0][0] = getRandNum(100);
+    while (numDividers.length < 5) {
+        that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
         numDividers = getNumDividers(that.gameMatrix[0][0]);
     }
 
@@ -78,33 +79,31 @@ function startGame() {
     document.getElementById("fifthRowFirstNum").value = that.gameMatrix[4][0];
     document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
 
-    console.log(that.gameMatrix[0]);
+    //second row horizontal
+    that.gameMatrix[2][1] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[2][2] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[2][3] = parseInt(that.gameMatrix[2][0] + that.gameMatrix[2][1] - that.gameMatrix[2][2]);
 
-    // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
-    // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
+    document.getElementById("thirdRowSecNum").value = that.gameMatrix[2][1];
+    document.getElementById("thirdRowThirdNum").value = that.gameMatrix[2][2];
+    document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
 
-    // console.log(that.gameMatrix[2, 0]);
-    // console.log(that.gameMatrix[4, 0]);
-    // console.log(that.gameMatrix[6, 0]);
-    // console.log(parseInt((that.gameMatrix[0, 0] / that.gameMatrix[2, 0]) * that.gameMatrix[4, 0]));
+    //third row horizontal
+    that.gameMatrix[4][1] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[4][2] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[4][3] = parseInt(that.gameMatrix[4][0] * that.gameMatrix[4][1] / that.gameMatrix[4][2]);
 
+    document.getElementById("fifthRowSecNum").value = that.gameMatrix[4][1];
+    document.getElementById("fifthRowThirdNum").value = that.gameMatrix[4][2];
+    document.getElementById("fifthRowTotalNum").value = that.gameMatrix[4][3];
 
+    //second vertical row
+    that.gameMatrix[6][1] = parseInt(that.gameMatrix[0][2] * that.gameMatrix[2][1] / that.gameMatrix[4][1]);
+    document.getElementById("verticalTotalTwo").value = that.gameMatrix[6][1];
 
-
-    // that.randNum = numDividers[Math.floor(Math.random() * numDividers.length)];
-    // document.getElementById("thirdRowFirstNum").value = that.randNum;
-    // that.randNum = numDividers[Math.floor(Math.random() * numDividers.length)];
-    // document.getElementById("fifthRowFirstNum").value = that.randNum;
-    // that.randNum = numDividers[Math.floor(Math.random() * numDividers.length)];
-    // document.getElementById("verticalTotalOne").value = parseInt((that.gameMatrix[0, 0] / that.gameMatrix[2, 0]) * that.gameMatrix[4, 0]);
-
-    // console.log(that.gameMatrix);
-
-    // console.log(document.getElementById("firstRowSecNum"));
-    // console.log(randomNumber);
-    // console.log(numDividers);
-
-
+    //third vertical row
+    that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][2] * that.gameMatrix[4][2]);
+    document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
 }
 
 // function getRandNum(limit) {
@@ -127,7 +126,7 @@ function getNumDividers(num) {
             if (num / i !== i)
                 numFactors.push(num / i);
         }
-    numFactors.sort(function (x, y) {
+    numFactors.sort(function(x, y) {
         return x - y;
     }); // numeric sort
     return numFactors;
