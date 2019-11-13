@@ -28,20 +28,20 @@ function startGame() {
 
     let inputs = document.getElementsByTagName("input");
     that.gameMatrix[0][0] = getRandNum(100);
-    console.log(that.gameMatrix[0]);
-    return;
+    // console.log(that.gameMatrix[0]);
+    // return;
 
     let numDividers = getNumDividers(that.gameMatrix[0, 0]);
     while (numDividers.length < 2) {
-        that.gameMatrix[0, 0] = getRandNum(100);
-        numDividers = getNumDividers(that.gameMatrix[0, 0]);
+        that.gameMatrix[0][0] = getRandNum(100);
+        numDividers = getNumDividers(that.gameMatrix[0][0]);
     }
 
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
     for (let i = 0; i < inputs.length; i++) {
         switch (i) {
             case 0:
-                inputs[i].value = that.gameMatrix[0, 0];
+                inputs[i].value = that.gameMatrix[0][0];
                 break;
             default:
                 inputs[i].disabled = false;
@@ -56,13 +56,13 @@ function startGame() {
 
     //first horizontal line
     // that.gameMatrix[0, 2] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[0, 2] = numDividers[getRandNum(numDividers.length)];
-    that.gameMatrix[0, 4] = numDividers[getRandNum(numDividers.length)];
-    that.gameMatrix[0, 6] = parseInt((that.gameMatrix[0, 0] / that.gameMatrix[0, 2]) + that.gameMatrix[0, 4]);
+    that.gameMatrix[0][2] = numDividers[getRandNum(numDividers.length)];
+    that.gameMatrix[0][4] = numDividers[getRandNum(numDividers.length)];
+    that.gameMatrix[0][6] = parseInt((that.gameMatrix[0][0] / that.gameMatrix[0][2]) + that.gameMatrix[0][4]);
 
-    document.getElementById("firstRowSecNum").value = that.gameMatrix[0, 2];
-    document.getElementById("firstRowThirdNum").value = that.gameMatrix[0, 4];
-    document.getElementById("firstRowTotalNum").value = that.gameMatrix[0, 6];
+    document.getElementById("firstRowSecNum").value = that.gameMatrix[0][2];
+    document.getElementById("firstRowThirdNum").value = that.gameMatrix[0][4];
+    document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
 
     //first vertical line
 
@@ -71,12 +71,12 @@ function startGame() {
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
 
 
-    that.gameMatrix[2, 0] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[4, 0] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[6, 0] = parseInt((that.gameMatrix[0, 0] / that.gameMatrix[2, 0]) * that.gameMatrix[4, 0]);
-    document.getElementById("thirdRowFirstNum").value = that.gameMatrix[2, 0];
-    document.getElementById("fifthRowFirstNum").value = that.gameMatrix[4, 0];
-    document.getElementById("verticalTotalOne").value = that.gameMatrix[6, 0];
+    that.gameMatrix[2][0] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[4][0] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[6][0] = parseInt((that.gameMatrix[0][0] / that.gameMatrix[2][0]) * that.gameMatrix[4][0]);
+    document.getElementById("thirdRowFirstNum").value = that.gameMatrix[2][0];
+    document.getElementById("fifthRowFirstNum").value = that.gameMatrix[4][0];
+    document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
 
     console.log(that.gameMatrix[0]);
 
