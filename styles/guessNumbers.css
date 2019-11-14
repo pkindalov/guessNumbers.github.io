@@ -11,23 +11,28 @@
     filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
 }
 
-.active{
+.active {
     border: 1px solid black;
 }
 
-.disabled{
+.disabled {
     border: 2px solid green;
 }
 
-.mathSymbol{
+td.disabled input {
+    font-weight: bold;
+    color: black;
+}
+
+.mathSymbol {
     font-weight: bold;
     font-size: 25px;
 }
 
-input, td{
+input,
+td {
     text-align: center;
 }
-
 
 
 /* .active {
