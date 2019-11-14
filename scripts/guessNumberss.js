@@ -13,36 +13,203 @@ that.gameMatrix = [
     [0, 'empty', 0, 'empty', 0, 'empty', 'empty']
 ];
 
+that.numDividers = [];
+
+that.availableNumbersForUse = {
+    one: {
+        num: 1,
+        count: 0
+    },
+    two: {
+        num: 2,
+        count: 0
+    },
+    three: {
+        num: 3,
+        count: 0
+    },
+    four: {
+        num: 4,
+        count: 0
+    },
+    five: {
+        num: 5,
+        count: 0
+    },
+    six: {
+        num: 6,
+        count: 0
+    },
+    seven: {
+        num: 7,
+        count: 0
+    },
+    eight: {
+        num: 8,
+        count: 0
+    },
+    nine: {
+        num: 9,
+        count: 0
+    },
+}
+
+// function getNotRepeatDivider(dividers) {
+//     let dividerName = "";
+//     for (let div of dividers) {
+//         // console.log(div);
+//         if (div == 0) continue;
+//         dividerName = getNumberName(div);
+//         if (that.availableNumbersForUse[dividerName].count == 0) {
+//             that.availableNumbersForUse[dividerName].count = 1;
+//             return that.availableNumbersForUse[dividerName].num;
+//         }
+
+
+//         return 1;
+//     }
+// }
+
+
+function genRndNumInEmptyCells() {
+    let availNumKeys = Object.keys(that.availableNumbersForUse);
+    let rndNumName = '';
+    let rndNum = Math.floor(Math.random() * availNumKeys.length);
+    let retNumber = 1;
+    let keyName = '';
+
+    if (availNumKeys[rndNum]) {
+        keyName = availNumKeys[rndNum];
+        retNumber = that.availableNumbersForUse[keyName].num;
+        delete that.availableNumbersForUse[keyName];
+        return retNumber;
+    }
+
+
+
+    // if (availNumKeys.length < 3) {
+    //     rndNumName = getNumberName(availNumKeys[0]);
+    //     // that.availableNumbersForUse[rndNumName].count = 1;
+    //     returnNum = that.availableNumbersForUse[rndNumName].num;
+    //     delete that.availableNumbersForUse[rndNumName];
+    //     return returnNum;
+    // }
+
+
+    // let rndNum = availNumKeys.length > 3 ? Math.floor(Math.random() * availNumKeys.length) : 0;
+    // // let availableNumsToPutInCells = true;
+    // let returnNum = 1;
+    // while (rndNum == 0) {
+    //     rndNum = Math.floor(Math.random() * availNumKeys.length);
+    // }
+
+    // rndNumName = getNumberName(rndNum);
+
+    // if (that.availableNumbersForUse[rndNumName]) {
+    //     returnNum = that.availableNumbersForUse[rndNumName].num;
+    //     delete that.availableNumbersForUse[rndNumName];
+    //     return returnNum;
+    // }
+
+
+
+
+
+
+
+
+    // if(availNumKeys.length > 0){
+    //     genRndNumInEmptyCells();
+    // }
+
+
+    // if (that.availableNumbersForUse[rndNumName].count == 0) {
+    //     that.availableNumbersForUse[rndNumName].count = 1;
+    //     returnNum = that.availableNumbersForUse[rndNumName].num;
+    //     delete that.availableNumbersForUse[rndNumName];
+    //     return returnNum;
+    // }
+
+    // let availNumKeys = Object.keys(that.availableNumbersForUse);
+    // if (availNumKeys[rndNumName]) {
+
+    // }
+    // for (let k = 0; k < availNumKeys.length; k++) {
+    //     if (availNumKeys[k].count != 0) {
+    //         availableNumsToPutInCells = false;
+    //     }
+    // }
+
+    // if (availableNumsToPutInCells) {
+    //     genRndNumInEmptyCells();
+    // }
+
+}
+
+
+
+function getNumberName(num) {
+    switch (num) {
+        case 0:
+            return 0;
+        case 1:
+            return "one";
+        case 2:
+            return "two";
+        case 3:
+            return "three";
+        case 4:
+            return "four";
+        case 5:
+            return "five";
+        case 6:
+            return "six";
+        case 7:
+            return "seven";
+        case 8:
+            return "eight";
+        case 9:
+            return "nine";
+    }
+}
+
 
 function getRandNum(limit) {
-    let randomNumber = Math.floor(Math.random() * limit)
+    let randomNumber = Math.floor(Math.random() * limit);
     randomNumber % 2 == 0 ? randomNumber : getRandNum(limit);
     return randomNumber;
 }
 
 function startGame() {
-    // console.log(that.gameMatrix[0]);
-    // return;
-    // console.log(that.gameMatrix);
-    // that.gameMatrix[0][0] = 44;
-    // return;
+
 
     let inputs = document.getElementsByTagName("input");
     that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
+
+    // console.log(document.getElementsByTagName("summary")[0]);
+    document.getElementsByTagName("summary")[0].hidden = true;
     // console.log(that.gameMatrix[0]);
     // return;
 
-    let numDividers = getNumDividers(that.gameMatrix[0, 0]);
+    that.numDividers = getNumDividers(that.gameMatrix[0, 0]);
     while (numDividers.length < 5) {
         that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
-        numDividers = getNumDividers(that.gameMatrix[0][0]);
+        that.numDividers = getNumDividers(that.gameMatrix[0][0]);
     }
 
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
     for (let i = 0; i < inputs.length; i++) {
+        console.log(inputs[i]);
         switch (i) {
             case 0:
                 inputs[i].value = that.gameMatrix[0][0];
+                break;
+            case 3:
+            case 7:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 break;
             default:
                 inputs[i].disabled = false;
@@ -57,8 +224,8 @@ function startGame() {
 
     //first horizontal line
     // that.gameMatrix[0, 2] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[0][2] = numDividers[getRandNum(numDividers.length)];
-    that.gameMatrix[0][4] = numDividers[getRandNum(numDividers.length)];
+    that.gameMatrix[0][2] = genRndNumInEmptyCells();
+    that.gameMatrix[0][4] = genRndNumInEmptyCells();
     that.gameMatrix[0][6] = parseInt((that.gameMatrix[0][0] / that.gameMatrix[0][2]) + that.gameMatrix[0][4]);
 
     document.getElementById("firstRowSecNum").value = that.gameMatrix[0][2];
@@ -72,16 +239,16 @@ function startGame() {
     // console.log(numDividers[Math.floor(Math.random() * numDividers.length)]);
 
 
-    that.gameMatrix[2][0] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[4][0] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[2][0] = genRndNumInEmptyCells();
+    that.gameMatrix[4][0] = genRndNumInEmptyCells();
     that.gameMatrix[6][0] = parseInt((that.gameMatrix[0][0] / that.gameMatrix[2][0]) * that.gameMatrix[4][0]);
     document.getElementById("thirdRowFirstNum").value = that.gameMatrix[2][0];
     document.getElementById("fifthRowFirstNum").value = that.gameMatrix[4][0];
     document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
 
     //second row horizontal
-    that.gameMatrix[2][1] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[2][2] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[2][1] = genRndNumInEmptyCells();
+    that.gameMatrix[2][2] = genRndNumInEmptyCells();
     that.gameMatrix[2][3] = parseInt(that.gameMatrix[2][0] + that.gameMatrix[2][1] - that.gameMatrix[2][2]);
 
     document.getElementById("thirdRowSecNum").value = that.gameMatrix[2][1];
@@ -89,8 +256,8 @@ function startGame() {
     document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
 
     //third row horizontal
-    that.gameMatrix[4][1] = numDividers[Math.floor(Math.random() * numDividers.length)];
-    that.gameMatrix[4][2] = numDividers[Math.floor(Math.random() * numDividers.length)];
+    that.gameMatrix[4][1] = genRndNumInEmptyCells();
+    that.gameMatrix[4][2] = genRndNumInEmptyCells();
     that.gameMatrix[4][3] = parseInt(that.gameMatrix[4][0] * that.gameMatrix[4][1] / that.gameMatrix[4][2]);
 
     document.getElementById("fifthRowSecNum").value = that.gameMatrix[4][1];
@@ -104,6 +271,8 @@ function startGame() {
     //third vertical row
     that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][2] * that.gameMatrix[4][2]);
     document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
+
+    console.log(that.availableNumbersForUse);
 }
 
 // function getRandNum(limit) {
@@ -126,7 +295,7 @@ function getNumDividers(num) {
             if (num / i !== i)
                 numFactors.push(num / i);
         }
-    numFactors.sort(function(x, y) {
+    numFactors.sort(function (x, y) {
         return x - y;
     }); // numeric sort
     return numFactors;

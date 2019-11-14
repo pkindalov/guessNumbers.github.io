@@ -11,6 +11,21 @@
     filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
 }
 
+.active{
+    border: 1px solid black;
+}
+
+
+.mathSymbol{
+    font-weight: bold;
+    font-size: 25px;
+}
+
+input, td{
+    text-align: center;
+}
+
+
 
 /* .active {
     border-bottom: 1px solid green;
