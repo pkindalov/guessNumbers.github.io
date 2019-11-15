@@ -1,7 +1,7 @@
 var that = this;
 let startBtn = document.getElementById("startGame");
 let sendBtn = document.getElementById("sendResult");
-let topLimitRandNums = 30;
+let topLimitRandNums = 50;
 
 that.gameMatrix = [
     [0, 'mathChar', 0, 'mathChar', 0, 'mathChar', 0],
@@ -87,14 +87,14 @@ function genRndNumInEmptyCells() {
 }
 
 
-function genNumDeleteCell(number) {
+function genNumDeleteCell(number, number2 = 1) {
     let availNumKeys = Object.keys(that.availableNumbersForUse);
     let rndNumName = '';
     let rndNum = Math.floor(Math.random() * availNumKeys.length);
     let retNumber = 1;
     let keyName = '';
 
-    if (availNumKeys[rndNum] && number % that.availableNumbersForUse[availNumKeys[rndNum]].num == 0) {
+    if (availNumKeys[rndNum] && (number * number2) % that.availableNumbersForUse[availNumKeys[rndNum]].num == 0) {
         keyName = availNumKeys[rndNum];
         retNumber = that.availableNumbersForUse[keyName].num;
         delete that.availableNumbersForUse[keyName];
@@ -227,7 +227,7 @@ function startGame() {
     document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
 
     //third row horizontal
-    that.gameMatrix[4][1] = genNumDeleteCell(that.gameMatrix[2][1]);
+    that.gameMatrix[4][1] = genNumDeleteCell(that.gameMatrix[2][1], that.gameMatrix[0][2]);
     that.gameMatrix[4][2] = genRndNumInEmptyCells();
     that.gameMatrix[4][3] = parseInt(that.gameMatrix[4][0] * that.gameMatrix[4][1] / that.gameMatrix[4][2]);
 
@@ -245,7 +245,7 @@ function startGame() {
 
     // console.log(that.availableNumbersForUse);
     // console.log(that.gameMatrix[2][1]);
-    console.log(that.gameMatrix[4][1]);
+    // console.log(that.gameMatrix[0][2]);
 
 }
 
@@ -269,7 +269,7 @@ function getNumDividers(num) {
             if (num / i !== i)
                 numFactors.push(num / i);
         }
-    numFactors.sort(function(x, y) {
+    numFactors.sort(function (x, y) {
         return x - y;
     }); // numeric sort
     return numFactors;
