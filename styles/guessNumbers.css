@@ -29,6 +29,10 @@ td.disabled input {
     font-size: 25px;
 }
 
+.hideMe{
+    visibility: hidden;
+}
+
 input,
 td {
     text-align: center;

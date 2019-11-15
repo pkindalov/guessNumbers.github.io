@@ -1,6 +1,7 @@
 var that = this;
 let startBtn = document.getElementById("startGame");
 let sendBtn = document.getElementById("sendResult");
+// sendBtn.style.visibility = 'hidden';
 let topLimitRandNums = 50;
 
 that.gameMatrix = [
@@ -192,6 +193,7 @@ function startGame() {
 
     startBtn.disabled = true;
     sendBtn.disabled = false;
+    sendBtn.style.visibility = 'visible';
 
     //first horizontal line
     // that.gameMatrix[0, 2] = numDividers[Math.floor(Math.random() * numDividers.length)];
