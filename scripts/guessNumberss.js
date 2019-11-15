@@ -191,7 +191,8 @@ function startGame() {
         }
     }
 
-    startBtn.disabled = true;
+    // startBtn.disabled = true;
+    startBtn.style.visibility = 'hidden';
     sendBtn.disabled = false;
     sendBtn.style.visibility = 'visible';
 
