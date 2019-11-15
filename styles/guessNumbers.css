@@ -17,6 +17,7 @@
 
 .disabled {
     border: 2px solid green;
+    background-color: #78c478;
 }
 
 td.disabled input {
