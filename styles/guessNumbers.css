@@ -11,9 +11,9 @@
     filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
 }
 
-.active {
+/* .active {
     border: 1px solid black;
-}
+} */
 
 .disabled {
     border: 2px solid green;
