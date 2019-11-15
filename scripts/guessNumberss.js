@@ -147,7 +147,7 @@ function getNumberName(num) {
 
 function getRandNum(limit) {
     let randomNumber = Math.floor(Math.random() * limit);
-    randomNumber % 2 == 0 ? randomNumber : getRandNum(limit);
+    // randomNumber % 2 == 0 ? randomNumber : getRandNum(limit);
     return randomNumber;
 }
 
