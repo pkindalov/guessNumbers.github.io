@@ -537,6 +537,35 @@ function fillMatrixCells() {
 
 
 
+function checkFieldsRepeatNums() {
+    let validFields = true;
+    let fieldsNums = [
+        [that.gameMatrix[0][2], that.gameMatrix[0][4], that.gameMatrix[2][0], that.gameMatrix[2][2],
+            that.gameMatrix[2][4], that.gameMatrix[4][0], that.gameMatrix[4][2], that.gameMatrix[4][4]
+        ],
+        // [that.gameMatrix[2][4], that.gameMatrix[4][0], that.gameMatrix[4][2], that.gameMatrix[4][4]]
+    ];
+
+    fieldsNums[0].sort((a, b) => a - b);
+
+
+    for (let row = 0; row < fieldsNums.length; row++) {
+        for (let col = 0; col < fieldsNums[row].length; col++) {
+            let num1 = fieldsNums[row][col];
+            let num2 = fieldsNums[row][col + 1];
+
+            if (fieldsNums[row][col] == fieldsNums[row][col + 1]) {
+                console.log('Number: ' + fieldsNums[row][col] + ' is repeating');
+                validFields = false;
+                break;
+            }
+        }
+    }
+    console.log(fieldsNums);
+    return validFields;
+}
+
+
 
 
 
@@ -545,6 +574,7 @@ function startGame() {
 
 
     let inputs = document.getElementsByTagName("input");
+    let startGameCount = 0;
     //let numPos = -1;
     // that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
 
@@ -592,6 +622,13 @@ function startGame() {
     sendBtn.style.visibility = 'visible';
 
     fillMatrixCells();
+    checkFieldsRepeatNums();
+    while (!checkFieldsRepeatNums()) {
+        if (startGameCount > 10) return;
+        that.availableNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        startGame();
+        startGameCount++;
+    }
     // let secondVerticalRowInfo = genNumOneByNumTwoDividedByThirdNum();
     // // console.log(secondVerticalRowInfo);
     // that.gameMatrix[0][2] = secondVerticalRowInfo[0];
