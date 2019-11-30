@@ -410,11 +410,11 @@ function genNumOneByNumTwoDividedByThirdNumFiftRow(num2) {
 // }
 
 function generateFirstRowNum(number) {
-    let randomNumber = Math.floor(Math.random() * 100);
+    let randomNumber = Math.floor(Math.random() * 50);
     let expression = randomNumber % number == 0;
     let counter = 0;
     while (!expression) {
-        randomNumber = Math.floor(Math.random() * 100);
+        randomNumber = Math.floor(Math.random() * 50);
         expression = randomNumber % number == 0;
         if (counter > 9) break;
     }
@@ -423,7 +423,7 @@ function generateFirstRowNum(number) {
     let result = 0;
     counter = 0;
     while (randomNumber == 0 || numDividers.length > 6 || randomNumber == number || (randomNumber % number) != 0 || that.availableNums.indexOf(randomNumber) >= 0) {
-        randomNumber = Math.floor(Math.random() * 100);
+        randomNumber = Math.floor(Math.random() * 50);
         numDividers = getNumDividers(randomNumber);
         if (counter > 9) break;
         counter++;
@@ -480,6 +480,22 @@ function restCellsRndNumGen() {
 }
 
 
+function checkFirstRowColNumIfDivide(rowCell1, collCell1, rowCell2, colCell2, rowCell3, collCell3) {
+    let isFieldNumValid = true;
+
+    if (that.gameMatrix[rowCell1][collCell1] % that.gameMatrix[rowCell2][colCell2] != 0 ||
+        that.gameMatrix[rowCell1][collCell1] % that.gameMatrix[rowCell3][collCell3] != 0
+    ) {
+        isFieldNumValid = false;
+    }
+
+    console.log(isFieldNumValid);
+    return isFieldNumValid;
+
+}
+
+
+
 function fillMatrixCells() {
     let secondVerticalRowInfo = genNumOneByNumTwoDividedByThirdNum();
     // console.log(secondVerticalRowInfo);
@@ -524,7 +540,7 @@ function fillMatrixCells() {
     that.gameMatrix[2][3] = parseInt(that.gameMatrix[2][0] + that.gameMatrix[2][2] - that.gameMatrix[2][4]);
     that.gameMatrix[4][6] = parseInt(that.gameMatrix[4][0] * that.gameMatrix[4][2] / that.gameMatrix[4][4]);
     that.gameMatrix[6][1] = parseInt(that.gameMatrix[0][2] * that.gameMatrix[2][2] / that.gameMatrix[4][2]);
-    that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][2] * that.gameMatrix[4][2]);
+    that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][4] * that.gameMatrix[4][4]);
 
     document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
     document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
@@ -641,7 +657,8 @@ function startGame() {
 
     fillMatrixCells();
     checkFieldsRepeatNums();
-    while (!checkFieldsRepeatNums() || !checkForNegativeResultsAndZeroes()) {
+
+    while (!checkFieldsRepeatNums() || !checkForNegativeResultsAndZeroes() || !checkFirstRowColNumIfDivide(0, 0, 0, 2, 2, 0)) {
         if (that.startGameCount > 10) return;
         that.availableNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         startGame();
