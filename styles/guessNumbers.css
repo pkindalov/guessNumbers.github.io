@@ -11,6 +11,7 @@
     filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
 }
 
+
 /* .active {
     border: 1px solid black;
 } */
@@ -30,13 +31,18 @@ td.disabled input {
     font-size: 25px;
 }
 
-.hideMe{
+.hideMe {
     visibility: hidden;
 }
 
 input,
 td {
     text-align: center;
+}
+
+.errors {
+    color: red;
+    font-weight: bold;
 }
 
 

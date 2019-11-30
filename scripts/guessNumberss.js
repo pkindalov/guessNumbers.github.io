@@ -4,6 +4,52 @@ let startBtn = document.getElementById("startGame");
 let sendBtn = document.getElementById("sendResult");
 // sendBtn.style.visibility = 'hidden';
 let topLimitRandNums = 20;
+that.errors = {
+    ids: []
+}
+that.fields = [{
+        id: 'firstRowSecNum',
+        row: 0,
+        col: 2
+    },
+    {
+        id: 'firstRowThirdNum',
+        row: 0,
+        col: 4
+    },
+    {
+        id: 'thirdRowFirstNum',
+        row: 2,
+        col: 0
+    },
+    {
+        id: 'thirdRowSecNum',
+        row: 2,
+        col: 2
+    },
+    {
+        id: 'thirdRowThirdNum',
+        row: 2,
+        col: 4
+    },
+    {
+        id: 'fifthRowFirstNum',
+        row: 4,
+        col: 0
+    },
+    {
+        id: 'fifthRowSecNum',
+        row: 4,
+        col: 2
+    },
+    {
+        id: 'fifthRowThirdNum',
+        row: 4,
+        col: 4
+    }
+];
+
+that.userInputs = [];
 
 
 that.gameMatrix = [
@@ -600,6 +646,56 @@ function checkForNegativeResultsAndZeroes() {
 }
 
 
+function checkUserInputs() {
+    that.errors = {
+        ids: []
+    }
+
+    that.userInputs = [{
+        id: 'firstRowSecNum',
+        value: parseInt(document.getElementById('firstRowSecNum').value)
+    }, {
+        id: 'firstRowThirdNum',
+        value: parseInt(document.getElementById('firstRowThirdNum').value),
+
+    }, {
+        id: 'thirdRowFirstNum',
+        value: parseInt(document.getElementById('thirdRowFirstNum').value),
+    }, {
+        id: 'thirdRowSecNum',
+        value: parseInt(document.getElementById('thirdRowSecNum').value),
+    }, {
+        id: 'thirdRowThirdNum',
+        value: parseInt(document.getElementById('thirdRowThirdNum').value),
+    }, {
+        id: 'fifthRowFirstNum',
+        value: parseInt(document.getElementById('fifthRowFirstNum').value),
+    }, {
+        id: 'fifthRowSecNum',
+        value: parseInt(document.getElementById('fifthRowSecNum').value),
+    }, {
+        id: 'fifthRowThirdNum',
+        value: parseInt(document.getElementById('fifthRowThirdNum').value),
+    }];
+
+    for (let i = 0; i < that.userInputs.length; i++) {
+        if (that.userInputs[i].id == that.fields[i].id && that.userInputs[i].value != that.gameMatrix[that.fields[i].row][that.fields[i].col]) {
+            let pos = errors.ids.indexOf(that.userInputs[i].id);
+            if (pos < 0) {
+                that.errors.ids.push(userInputs[i].id);
+            }
+
+        }
+    }
+
+    if (that.errors.ids.length > 0) {
+        document.getElementById('errorsContainer').innerHTML = `<p class="errors">You have <span class"errorSpan">${that.errors.ids.length}</span> errors</p>`;
+    } else {
+        document.getElementById('errorsContainer').innerHTML = '';
+    }
+    console.log(that.errors.ids.length);
+
+}
 
 
 
@@ -815,3 +911,4 @@ function checkDividers(dividers) {
 }
 
 startBtn.addEventListener("click", startGame);
+sendBtn.addEventListener('click', checkUserInputs);
