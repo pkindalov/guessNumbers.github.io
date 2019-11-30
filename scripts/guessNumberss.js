@@ -1,4 +1,5 @@
 var that = this;
+that.startGameCount = 0;
 let startBtn = document.getElementById("startGame");
 let sendBtn = document.getElementById("sendResult");
 // sendBtn.style.visibility = 'hidden';
@@ -555,13 +556,30 @@ function checkFieldsRepeatNums() {
             let num2 = fieldsNums[row][col + 1];
 
             if (fieldsNums[row][col] == fieldsNums[row][col + 1]) {
-                console.log('Number: ' + fieldsNums[row][col] + ' is repeating');
+                // console.log('Number: ' + fieldsNums[row][col] + ' is repeating');
                 validFields = false;
                 break;
             }
         }
     }
-    console.log(fieldsNums);
+    // console.log(fieldsNums);
+    return validFields;
+}
+
+
+function checkForNegativeResultsAndZeroes() {
+    let validFields = true;
+    let totalResultFields = [that.gameMatrix[0][6], that.gameMatrix[6][0], that.gameMatrix[2][3],
+        that.gameMatrix[4][6], that.gameMatrix[6][1], that.gameMatrix[6][2]
+    ];
+
+    for (let i = 0; i < totalResultFields.length; i++) {
+        if (totalResultFields[i] <= 0) {
+            validFields = false;
+            break;
+        }
+    }
+
     return validFields;
 }
 
@@ -574,7 +592,7 @@ function startGame() {
 
 
     let inputs = document.getElementsByTagName("input");
-    let startGameCount = 0;
+
     //let numPos = -1;
     // that.gameMatrix[0][0] = getRandNum(topLimitRandNums);
 
@@ -623,12 +641,15 @@ function startGame() {
 
     fillMatrixCells();
     checkFieldsRepeatNums();
-    while (!checkFieldsRepeatNums()) {
-        if (startGameCount > 10) return;
+    while (!checkFieldsRepeatNums() || !checkForNegativeResultsAndZeroes()) {
+        if (that.startGameCount > 10) return;
         that.availableNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         startGame();
-        startGameCount++;
+        that.startGameCount++;
+        console.log('restart game count: ' + that.startGameCount);
     }
+
+    that.startGame = 0;
     // let secondVerticalRowInfo = genNumOneByNumTwoDividedByThirdNum();
     // // console.log(secondVerticalRowInfo);
     // that.gameMatrix[0][2] = secondVerticalRowInfo[0];
