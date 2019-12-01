@@ -546,38 +546,38 @@ function fillMatrixCells() {
     let secondVerticalRowInfo = genNumOneByNumTwoDividedByThirdNum();
     // console.log(secondVerticalRowInfo);
     that.gameMatrix[0][2] = secondVerticalRowInfo[0];
-    document.getElementById('firstRowSecNum').value = that.gameMatrix[0][2];
+    // document.getElementById('firstRowSecNum').value = that.gameMatrix[0][2];
 
     that.gameMatrix[2][2] = secondVerticalRowInfo[1];
-    document.getElementById('thirdRowSecNum').value = that.gameMatrix[2][2];
+    // document.getElementById('thirdRowSecNum').value = that.gameMatrix[2][2];
 
     that.gameMatrix[4][2] = secondVerticalRowInfo[2];
-    document.getElementById('fifthRowSecNum').value = that.gameMatrix[4][2];
+    // document.getElementById('fifthRowSecNum').value = that.gameMatrix[4][2];
 
     document.getElementById('verticalTotalTwo').value = (that.gameMatrix[0][2] * that.gameMatrix[2][2]) / that.gameMatrix[4][2];
 
 
     that.gameMatrix[0][0] = generateFirstRowNum(that.gameMatrix[0][2]);
-    document.getElementById('firstRowFirstNum').value = that.gameMatrix[0][0];
+    // document.getElementById('firstRowFirstNum').value = that.gameMatrix[0][0];
 
     that.gameMatrix[2][0] = generateThirdRowFirstCell(that.gameMatrix[0][0]);
-    document.getElementById('thirdRowFirstNum').value = that.gameMatrix[2][0];
+    // document.getElementById('thirdRowFirstNum').value = that.gameMatrix[2][0];
 
 
 
     let fifthHorizontalRowInfo = genNumOneByNumTwoDividedByThirdNumFiftRow(that.gameMatrix[4][2]);
     that.gameMatrix[4][0] = fifthHorizontalRowInfo[0];
-    document.getElementById('fifthRowFirstNum').value = that.gameMatrix[4][0];
+    // document.getElementById('fifthRowFirstNum').value = that.gameMatrix[4][0];
     that.gameMatrix[4][4] = fifthHorizontalRowInfo[2];
-    document.getElementById('fifthRowThirdNum').value = that.gameMatrix[4][4];
+    // document.getElementById('fifthRowThirdNum').value = that.gameMatrix[4][4];
     document.getElementById('fifthRowTotalNum').value = (that.gameMatrix[4][0] * fifthHorizontalRowInfo[1]) / that.gameMatrix[4][4];
 
 
     that.gameMatrix[0][4] = restCellsRndNumGen();
-    document.getElementById("firstRowThirdNum").value = that.gameMatrix[0][4];
+    // document.getElementById("firstRowThirdNum").value = that.gameMatrix[0][4];
 
     that.gameMatrix[2][4] = restCellsRndNumGen();
-    document.getElementById("thirdRowThirdNum").value = that.gameMatrix[2][4];
+    // document.getElementById("thirdRowThirdNum").value = that.gameMatrix[2][4];
 
 
     //calculate num from table cells
@@ -588,12 +588,12 @@ function fillMatrixCells() {
     that.gameMatrix[6][1] = parseInt(that.gameMatrix[0][2] * that.gameMatrix[2][2] / that.gameMatrix[4][2]);
     that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][4] * that.gameMatrix[4][4]);
 
-    document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
-    document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
-    document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
-    document.getElementById("fifthRowTotalNum").value = that.gameMatrix[4][6];
-    document.getElementById("verticalTotalTwo").value = that.gameMatrix[6][1];
-    document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
+    // document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
+    // document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
+    // document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
+    // document.getElementById("fifthRowTotalNum").value = that.gameMatrix[4][6];
+    // document.getElementById("verticalTotalTwo").value = that.gameMatrix[6][1];
+    // document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
 
     console.log(that.gameMatrix);
 }
@@ -692,6 +692,17 @@ function checkUserInputs() {
         document.getElementById('errorsContainer').innerHTML = `<p class="errors">You have <span class"errorSpan">${that.errors.ids.length}</span> errors</p>`;
     } else {
         document.getElementById('errorsContainer').innerHTML = '';
+        let gameContainer = document.getElementById('gameContainer');
+        gameContainer.innerHTML = '';
+
+        gameContainer.innerHTML = '<div id="congratImageCont"><img src="images/congratulations.gif" alt="you won image" />';
+        gameContainer.innerHTML += '<button id="restart" class="btn waves-effect waves-light" type="submit" name="action">Play Again <i class="material-icons right">send</i></button>';
+        gameContainer.innerHTML += '</div>';
+        document.getElementById('restart').onclick = () => window.location.reload();
+
+        document.getElementById('gameTittle').innerHTML = '<h1>Congratulations! You won!</h1>';
+        sendBtn.style.visibility = 'hidden';
+
     }
     console.log(that.errors.ids.length);
 
