@@ -588,12 +588,12 @@ function fillMatrixCells() {
     that.gameMatrix[6][1] = parseInt(that.gameMatrix[0][2] * that.gameMatrix[2][2] / that.gameMatrix[4][2]);
     that.gameMatrix[6][2] = parseInt(that.gameMatrix[0][4] + that.gameMatrix[2][4] * that.gameMatrix[4][4]);
 
-    // document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
-    // document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
-    // document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
-    // document.getElementById("fifthRowTotalNum").value = that.gameMatrix[4][6];
-    // document.getElementById("verticalTotalTwo").value = that.gameMatrix[6][1];
-    // document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
+    document.getElementById("firstRowTotalNum").value = that.gameMatrix[0][6];
+    document.getElementById("verticalTotalOne").value = that.gameMatrix[6][0];
+    document.getElementById("thirdRowTotalNum").value = that.gameMatrix[2][3];
+    document.getElementById("fifthRowTotalNum").value = that.gameMatrix[4][6];
+    document.getElementById("verticalTotalTwo").value = that.gameMatrix[6][1];
+    document.getElementById("verticalTotalThree").value = that.gameMatrix[6][2];
 
     console.log(that.gameMatrix);
 }
