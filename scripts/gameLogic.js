@@ -4,8 +4,8 @@
  */
 
 export const getNumDividers = (num) => {
+    if (num <= 0) return [];
     const numFactors = [];
-    if (num <= 0) return [1];
     for (let i = 1; i <= Math.floor(Math.sqrt(num)); i++) {
         if (num % i === 0) {
             numFactors.push(i);
@@ -33,9 +33,7 @@ export const genDividableTriplet = (availableNums) => {
 };
 
 export const genFifthRowTriplet = (availableNums, knownNum2) => {
-    const nums = [...availableNums];
-    const knownIdx = nums.indexOf(knownNum2);
-    if (knownIdx !== -1) nums.splice(knownIdx, 1);
+    const nums = availableNums.filter(n => n !== knownNum2);
 
     let cyclesCounter = 0;
     while (cyclesCounter < 500) {
@@ -80,7 +78,7 @@ export const restCellsRndNumGen = (availableNums) => {
 
 export const checkFieldsRepeatNums = (gameMatrix) => {
     const nums = [
-        gameMatrix[0][2], gameMatrix[0][4],
+        gameMatrix[0][0], gameMatrix[0][2], gameMatrix[0][4],
         gameMatrix[2][0], gameMatrix[2][2], gameMatrix[2][4],
         gameMatrix[4][0], gameMatrix[4][2], gameMatrix[4][4]
     ];
@@ -138,32 +136,25 @@ export const generateCompleteGrid = (maxInputRange = 20) => {
         matrix[0][2] = triplet1[0];
         matrix[2][2] = triplet1[1];
         matrix[4][2] = triplet1[2];
-        triplet1.forEach(n => {
-            const idx = availableNums.indexOf(n);
-            if (idx !== -1) availableNums.splice(idx, 1);
-        });
+        availableNums = availableNums.filter(n => !triplet1.includes(n));
 
         matrix[0][0] = generateFirstRowNum(availableNums, matrix[0][2], 100);
-        
+        // matrix[0][0] might not be in availableNums if it came from fallback
+        availableNums = availableNums.filter(n => n !== matrix[0][0]);
+
         matrix[2][0] = generateThirdRowFirstCell(availableNums, matrix[0][0]);
-        const idx20 = availableNums.indexOf(matrix[2][0]);
-        if (idx20 !== -1) availableNums.splice(idx20, 1);
+        availableNums = availableNums.filter(n => n !== matrix[2][0]);
 
         const triplet2 = genFifthRowTriplet(availableNums, matrix[4][2]);
         matrix[4][0] = triplet2[0];
         matrix[4][4] = triplet2[2];
-        [triplet2[0], triplet2[2]].forEach(n => {
-            const idx = availableNums.indexOf(n);
-            if (idx !== -1) availableNums.splice(idx, 1);
-        });
+        availableNums = availableNums.filter(n => n !== matrix[4][0] && n !== matrix[4][4]);
 
         matrix[0][4] = restCellsRndNumGen(availableNums);
-        const idx04 = availableNums.indexOf(matrix[0][4]);
-        if (idx04 !== -1) availableNums.splice(idx04, 1);
+        availableNums = availableNums.filter(n => n !== matrix[0][4]);
 
         matrix[2][4] = restCellsRndNumGen(availableNums);
-        const idx24 = availableNums.indexOf(matrix[2][4]);
-        if (idx24 !== -1) availableNums.splice(idx24, 1);
+        availableNums = availableNums.filter(n => n !== matrix[2][4]);
 
         const finalMatrix = calculateTotals(matrix);
         if (checkFieldsRepeatNums(finalMatrix) && checkForNegativeResultsAndZeroes(finalMatrix)) {
