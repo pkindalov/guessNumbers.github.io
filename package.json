@@ -1,0 +1,23 @@
+{
+  "name": "guessnumbers.github.io",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkindalov/guessNumbers.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pkindalov/guessNumbers.github.io/issues"
+  },
+  "homepage": "https://github.com/pkindalov/guessNumbers.github.io#readme",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}

@@ -28,11 +28,15 @@ td.disabled input {
 
 .mathSymbol {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 1.5rem;
 }
 
 .hideMe {
     visibility: hidden;
+}
+
+.hidden-element {
+    display: none !important;
 }
 
 input,
@@ -43,6 +47,11 @@ td {
 .errors {
     color: red;
     font-weight: bold;
+}
+
+.errorSpan {
+    font-size: 1.2rem;
+    text-decoration: underline;
 }
 
 

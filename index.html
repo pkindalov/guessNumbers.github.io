@@ -131,6 +131,14 @@
                 </table>
             </div>
         </div>
+        <div class="row" id="difficultyContainer">
+            <div class="col s12 center-align">
+                <h5>Select Difficulty</h5>
+                <button class="btn waves-effect waves-light difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button class="btn waves-effect waves-light difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="btn waves-effect waves-light difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
         <div class="row">
             <div class="col s12 center-align">
                 <div id="errorsContainer">&nbsp;</div>
@@ -143,7 +151,7 @@
                 </button>
             </div>
             <div class="col s6 right-align">
-                <button disabled="true" id="sendResult" class="btn waves-effect waves-light hideMe" type="submit" name="action">Send
+                <button id="sendResult" class="btn waves-effect waves-light hidden-element" type="submit" name="action">Send
                     <i class="material-icons right">send</i>
                 </button>
             </div>
@@ -151,7 +159,7 @@
     </div>
 
 
-    <script src='./scripts/guessNumberss.js'></script>
+    <script type="module" src='./scripts/guessNumberss.js'></script>
 </body>
 
 </html>

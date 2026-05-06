@@ -1,2 +1,4 @@
 .vscode/csak-timelog.json
 .vscode/launch.json
+node_modules
+GEMINI.md   
