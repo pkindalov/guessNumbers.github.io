@@ -1,60 +1,72 @@
-.container {
-    text-align: center;
+/* Custom styles for Guess the Numbers */
+
+.cell {
+    transition: all 0.2s ease-in-out;
 }
 
-.rotateText {
-    transform: translateX(-50%) translateY(-50%) rotate(-90deg);
-    /* display: block; */
-    /* writing-mode: vertical-rl;
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3); */
+/* Active input cell (waiting for user input) */
+.cell.active {
+    background-color: white;
+    border-color: #6366f1; /* indigo-500 */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-
-/* .active {
-    border: 1px solid black;
-} */
-
-.disabled {
-    border: 2px solid green;
-    background-color: #78c478;
+.cell.active:focus-within {
+    border-color: #4f46e5; /* indigo-600 */
+    ring: 2px;
+    ring-color: #a5b4fc; /* indigo-300 */
 }
 
-td.disabled input {
-    font-weight: bold;
-    color: black;
+/* Disabled/Fixed cell */
+.cell.disabled {
+    background-color: #f1f5f9; /* slate-100 */
+    border-color: transparent;
 }
 
-.mathSymbol {
-    font-weight: bold;
-    font-size: 1.5rem;
+/* Totals cells (success state) */
+.cell.bg-emerald-100 {
+    background-color: #d1fae5; /* emerald-100 */
 }
 
-.hideMe {
-    visibility: hidden;
+/* Difficulty Button Active State */
+.active-difficulty {
+    background-color: #4f46e5 !important; /* indigo-600 */
+    color: white !important;
+    box-shadow: 0 10px 15px -3px rgb(79 70 229 / 0.3);
+}
+
+/* Error states */
+.errors {
+    color: #ef4444; /* red-500 */
+    font-weight: 700;
+}
+
+.errorSpan {
+    background-color: #fee2e2; /* red-100 */
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Animation for the win state */
+@keyframes pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#congratImageCont {
+    animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .hidden-element {
     display: none !important;
 }
 
-input,
-td {
-    text-align: center;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.errors {
-    color: red;
-    font-weight: bold;
+input[type=number] {
+    -moz-appearance: textfield;
 }
-
-.errorSpan {
-    font-size: 1.2rem;
-    text-decoration: underline;
-}
-
-
-/* .active {
-    border-bottom: 1px solid green;
-} */
