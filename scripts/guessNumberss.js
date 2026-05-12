@@ -3,7 +3,8 @@
  * Aligned with Senior Developer Standards: ES6+, Functional Programming, Clean Code.
  */
 
-import { generateCompleteGrid } from './gameLogic.js';
+import { generateCompleteGrid, isLineCorrect } from './gameLogic.js';
+import { saveGameState, loadGameState, clearGameState, updateStats, loadStats } from './storage.js';
 
 const gameState = {
     difficulty: 'easy',
@@ -11,6 +12,7 @@ const gameState = {
         ids: []
     },
     fields: [
+        { id: 'firstRowFirstNum', row: 0, col: 0 },
         { id: 'firstRowSecNum', row: 0, col: 2 },
         { id: 'firstRowThirdNum', row: 0, col: 4 },
         { id: 'thirdRowFirstNum', row: 2, col: 0 },
@@ -20,7 +22,19 @@ const gameState = {
         { id: 'fifthRowSecNum', row: 4, col: 2 },
         { id: 'fifthRowThirdNum', row: 4, col: 4 }
     ],
-    gameMatrix: []
+    gameMatrix: [],
+    userMatrix: Array(7).fill(null).map(() => Array(7).fill(0))
+};
+
+const displayStats = () => {
+    const stats = loadStats();
+    const container = document.getElementById('statsContainer');
+    // Always show container now, but populate with data
+    container.classList.remove('hidden');
+    document.getElementById('totalWins').textContent = stats.totalWins || 0;
+    document.getElementById('easyWins').textContent = stats.difficultyWins.easy || 0;
+    document.getElementById('medWins').textContent = stats.difficultyWins.medium || 0;
+    document.getElementById('hardWins').textContent = stats.difficultyWins.hard || 0;
 };
 
 const startBtn = document.getElementById("startGame");
@@ -28,70 +42,154 @@ const sendBtn = document.getElementById("sendResult");
 const difficultyBtns = document.querySelectorAll(".difficulty-btn");
 
 /**
+ * Validates rows and columns in real-time and updates UI.
+ */
+const performRealTimeValidation = () => {
+    const indices = [0, 2, 4];
+    
+    // Rows
+    indices.forEach(i => {
+        const isCorrect = isLineCorrect(gameState.userMatrix, 'row', i);
+        const totalInput = document.getElementById(
+            i === 0 ? 'firstRowTotalNum' : (i === 2 ? 'thirdRowTotalNum' : 'fifthRowTotalNum')
+        );
+        const parent = totalInput.parentElement;
+        parent.classList.remove('correct-line', 'pending-line');
+        if (isCorrect) {
+            parent.classList.add('correct-line');
+        } else {
+            // Check if row is partially filled (dirty)
+            const rowInputs = gameState.fields.filter(f => f.row === i);
+            const isDirty = rowInputs.some(f => gameState.userMatrix[f.row][f.col] !== 0);
+            if (isDirty) parent.classList.add('pending-line');
+        }
+    });
+
+    // Columns
+    indices.forEach(i => {
+        const isCorrect = isLineCorrect(gameState.userMatrix, 'col', i);
+        const totalInput = document.getElementById(
+            i === 0 ? 'verticalTotalOne' : (i === 2 ? 'verticalTotalTwo' : 'verticalTotalThree')
+        );
+        const parent = totalInput.parentElement;
+        parent.classList.remove('correct-line', 'pending-line');
+        if (isCorrect) {
+            parent.classList.add('correct-line');
+        } else {
+            const colInputs = gameState.fields.filter(f => f.col === i);
+            const isDirty = colInputs.some(f => gameState.userMatrix[f.row][f.col] !== 0);
+            if (isDirty) parent.classList.add('pending-line');
+        }
+    });
+};
+
+/**
  * Updates the UI with the generated matrix totals and initial values.
  */
-const updateUIWithMatrix = (matrix) => {
-    // Horizontal Totals (Column 6)
+const updateUIWithMatrix = (matrix, userValues = null) => {
+    // Horizontal Totals
     document.getElementById("firstRowTotalNum").value = matrix[0][6];
     document.getElementById("thirdRowTotalNum").value = matrix[2][6];
     document.getElementById("fifthRowTotalNum").value = matrix[4][6];
     
-    // Vertical Totals (Row 6)
+    // Vertical Totals
     document.getElementById("verticalTotalOne").value = matrix[6][0];
     document.getElementById("verticalTotalTwo").value = matrix[6][2];
     document.getElementById("verticalTotalThree").value = matrix[6][4];
 
-    const inputs = document.getElementsByTagName("input");
+    // Sync static values to userMatrix
+    gameState.userMatrix[0][6] = matrix[0][6];
+    gameState.userMatrix[2][6] = matrix[2][6];
+    gameState.userMatrix[4][6] = matrix[4][6];
+    gameState.userMatrix[6][0] = matrix[6][0];
+    gameState.userMatrix[6][2] = matrix[6][2];
+    gameState.userMatrix[6][4] = matrix[6][4];
+
+    const inputs = document.querySelectorAll("input");
     
-    // Easy mode: pre-fill 3 more random fields
-    const prefillCount = gameState.difficulty === 'easy' ? 3 : (gameState.difficulty === 'medium' ? 1 : 0);
-    const indicesToPrefill = [];
-    if (prefillCount > 0) {
-        while (indicesToPrefill.length < prefillCount) {
+    // Prefill logic for fresh game
+    let prefillIndices = [];
+    if (!userValues) {
+        const prefillCount = gameState.difficulty === 'easy' ? 4 : (gameState.difficulty === 'medium' ? 2 : 1);
+        while (prefillIndices.length < prefillCount) {
             const r = Math.floor(Math.random() * gameState.fields.length);
-            if (!indicesToPrefill.includes(r)) indicesToPrefill.push(r);
+            if (!prefillIndices.includes(r)) prefillIndices.push(r);
         }
     }
 
-    for (let i = 0; i < inputs.length; i++) {
-        const input = inputs[i];
-        if (input.id === 'firstRowFirstNum') {
-            input.value = matrix[0][0];
-        } else if (['firstRowTotalNum', 'thirdRowTotalNum', 'fifthRowTotalNum', 'verticalTotalOne', 'verticalTotalTwo', 'verticalTotalThree'].includes(input.id)) {
-            // Totals stay disabled/readonly
-            input.disabled = true;
-        } else {
-            const fieldId = input.id;
-            const fieldIdx = gameState.fields.findIndex(f => f.id === fieldId);
-            
-            if (fieldIdx !== -1 && indicesToPrefill.includes(fieldIdx)) {
-                input.value = matrix[gameState.fields[fieldIdx].row][gameState.fields[fieldIdx].col];
+    inputs.forEach(input => {
+        const fieldIdx = gameState.fields.findIndex(f => f.id === input.id);
+        if (fieldIdx !== -1) {
+            const field = gameState.fields[fieldIdx];
+            if (userValues) {
+                // Restore from saved state
+                input.value = userValues[field.row][field.col];
+                gameState.userMatrix[field.row][field.col] = userValues[field.row][field.col];
+                
+                // Ensure correct styling even on restore
+                if (input.value === matrix[field.row][field.col] && input.disabled) {
+                    input.parentElement.classList.remove('bg-slate-100', 'dark:bg-slate-700');
+                    input.parentElement.classList.add('bg-emerald-50', 'disabled');
+                } else {
+                    input.disabled = false;
+                    input.parentElement.classList.add('active');
+                }
+            } else if (prefillIndices.includes(fieldIdx)) {
+                input.value = matrix[field.row][field.col];
                 input.disabled = true;
-                input.parentNode.classList.add('disabled');
+                input.parentElement.classList.remove('bg-slate-100', 'dark:bg-slate-700');
+                input.parentElement.classList.add('bg-emerald-50', 'disabled');
+                gameState.userMatrix[field.row][field.col] = matrix[field.row][field.col];
             } else {
                 input.disabled = false;
-                input.parentNode.classList.remove('disabled');
-                input.parentNode.classList.add('active');
+                input.parentElement.classList.add('active');
                 input.value = 0;
+                gameState.userMatrix[field.row][field.col] = 0;
             }
         }
+    });
+
+    performRealTimeValidation();
+};
+
+const handleInput = (e) => {
+    const input = e.target;
+    const val = parseInt(input.value, 10) || 0;
+    const field = gameState.fields.find(f => f.id === input.id);
+    if (field) {
+        gameState.userMatrix[field.row][field.col] = val;
+        performRealTimeValidation();
+        saveGameState({
+            difficulty: gameState.difficulty,
+            gameMatrix: gameState.gameMatrix,
+            userMatrix: gameState.userMatrix
+        });
+    }
+};
+
+const handleKeyDown = (e) => {
+    const field = gameState.fields.find(f => f.id === e.target.id);
+    if (!field) return;
+
+    let nextRow = field.row;
+    let nextCol = field.col;
+
+    if (e.key === 'ArrowUp') nextRow -= 2;
+    if (e.key === 'ArrowDown') nextRow += 2;
+    if (e.key === 'ArrowLeft') nextCol -= 2;
+    if (e.key === 'ArrowRight') nextCol += 2;
+
+    const nextField = gameState.fields.find(f => f.row === nextRow && f.col === nextCol);
+    if (nextField) {
+        document.getElementById(nextField.id).focus();
     }
 };
 
 const checkUserInputs = () => {
     gameState.errors.ids = [];
-    const results = gameState.fields.map(field => {
-        const input = document.getElementById(field.id);
-        return {
-            id: field.id,
-            value: parseInt(input.value, 10),
-            expected: gameState.gameMatrix[field.row][field.col]
-        };
-    });
-
-    results.forEach(res => {
-        if (res.value !== res.expected) {
-            gameState.errors.ids.push(res.id);
+    gameState.fields.forEach(field => {
+        if (gameState.userMatrix[field.row][field.col] !== gameState.gameMatrix[field.row][field.col]) {
+            gameState.errors.ids.push(field.id);
         }
     });
 
@@ -99,6 +197,8 @@ const checkUserInputs = () => {
     if (gameState.errors.ids.length > 0) {
         errorContainer.innerHTML = `<p class="errors text-red-500 font-bold">You have <span class="errorSpan bg-red-100 px-2 rounded">${gameState.errors.ids.length}</span> errors</p>`;
     } else {
+        updateStats(gameState.difficulty);
+        clearGameState();
         errorContainer.innerHTML = '';
         const gameContainer = document.getElementById('gameContainer');
         gameContainer.innerHTML = `
@@ -114,6 +214,15 @@ const checkUserInputs = () => {
         document.getElementById('restart').onclick = () => window.location.reload();
         document.getElementById('gameTittle').innerHTML = '<h1 class="text-4xl font-extrabold text-emerald-600 tracking-tight">Congratulations! You won!</h1>';
         sendBtn.classList.add('hidden');
+        
+        // Trigger Confetti
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
     }
 };
 
@@ -123,28 +232,64 @@ const handleDifficultyChange = (e) => {
     gameState.difficulty = e.target.getAttribute('data-difficulty');
 };
 
-const startGame = () => {
-    const summary = document.getElementsByTagName("summary")[0];
+const startGame = (restoredData = null) => {
+    const summary = document.querySelector("summary");
     if (summary) summary.classList.add('hidden');
     document.getElementById('difficultyContainer').classList.add('hidden');
 
-    const maxInputRange = gameState.difficulty === 'easy' ? 10 : (gameState.difficulty === 'medium' ? 20 : 50);
-    const matrix = generateCompleteGrid(maxInputRange);
-    
-    if (!matrix) {
-        console.error("Failed to generate a valid game grid.");
-        gameState.gameMatrix = generateCompleteGrid(20);
+    if (restoredData) {
+        gameState.difficulty = restoredData.difficulty;
+        gameState.gameMatrix = restoredData.gameMatrix;
+        updateUIWithMatrix(gameState.gameMatrix, restoredData.userMatrix);
     } else {
-        gameState.gameMatrix = matrix;
+        const maxInputRange = gameState.difficulty === 'easy' ? 10 : (gameState.difficulty === 'medium' ? 20 : 50);
+        gameState.gameMatrix = generateCompleteGrid(maxInputRange);
+        updateUIWithMatrix(gameState.gameMatrix);
+        saveGameState({
+            difficulty: gameState.difficulty,
+            gameMatrix: gameState.gameMatrix,
+            userMatrix: gameState.userMatrix
+        });
     }
-
-    updateUIWithMatrix(gameState.gameMatrix);
 
     startBtn.classList.add('hidden');
     sendBtn.classList.remove('hidden');
     sendBtn.disabled = false;
 };
 
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    displayStats();
+    // Theme initialization
+    const theme = localStorage.getItem('theme') || 'light';
+    if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('sunIcon').classList.remove('hidden');
+        document.getElementById('moonIcon').classList.add('hidden');
+    }
+
+    const saved = loadGameState();
+    if (saved) {
+        if (confirm('A saved game was found. Would you like to continue?')) {
+            startGame(saved);
+        } else {
+            clearGameState();
+        }
+    }
+});
+
+const toggleTheme = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.getElementById('sunIcon').classList.toggle('hidden');
+    document.getElementById('moonIcon').classList.toggle('hidden');
+};
+
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
 difficultyBtns.forEach(btn => btn.addEventListener('click', handleDifficultyChange));
-startBtn.addEventListener("click", startGame);
+startBtn.addEventListener("click", () => startGame());
 sendBtn.addEventListener('click', checkUserInputs);
+
+document.getElementById('numbersTable').addEventListener('input', handleInput);
+document.getElementById('numbersTable').addEventListener('keydown', handleKeyDown);

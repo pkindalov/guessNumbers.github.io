@@ -164,3 +164,28 @@ export const generateCompleteGrid = (maxInputRange = 20) => {
     }
     return null;
 };
+
+/**
+ * Validates a single row or column of the matrix based on user inputs.
+ * @param {Array} matrix - The 7x7 game matrix.
+ * @param {string} type - 'row' or 'col'.
+ * @param {number} index - The index of the row or column (0, 2, or 4).
+ * @returns {boolean} - True if the line is mathematically correct.
+ */
+export const isLineCorrect = (matrix, type, index) => {
+    if (type === 'row') {
+        const [a, , b, , c, , total] = matrix[index];
+        if (index === 0) return (a / b) + c === total;
+        if (index === 2) return a + b - c === total;
+        if (index === 4) return (a * b) / c === total;
+    } else {
+        const a = matrix[0][index];
+        const b = matrix[2][index];
+        const c = matrix[4][index];
+        const total = matrix[6][index];
+        if (index === 0) return (a / b) * c === total;
+        if (index === 2) return (a * b) / c === total;
+        if (index === 4) return a + (b * c) === total;
+    }
+    return false;
+};

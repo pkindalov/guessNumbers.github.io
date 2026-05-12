@@ -6,9 +6,29 @@
 
 /* Active input cell (waiting for user input) */
 .cell.active {
-    background-color: white;
+    background-color: white !important;
     border-color: #6366f1; /* indigo-500 */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.dark .cell.active {
+    background-color: #1e293b !important; /* slate-800 */
+    color: white !important;
+}
+
+.dark input {
+    color: white !important;
+}
+
+/* Validation states */
+.correct-line {
+    outline: 4px solid #34d399 !important; /* emerald-400 */
+    outline-offset: 2px;
+}
+
+.pending-line {
+    outline: 2px dashed #f43f5e !important; /* rose-500 */
+    outline-offset: 1px;
 }
 
 .cell.active:focus-within {
@@ -23,9 +43,24 @@
     border-color: transparent;
 }
 
+.dark .cell.disabled {
+    background-color: #064e3b !important; /* emerald-900 */
+}
+
 /* Totals cells (success state) */
 .cell.bg-emerald-100 {
     background-color: #d1fae5; /* emerald-100 */
+}
+
+.dark .cell.bg-emerald-100,
+.dark .cell.bg-emerald-50 {
+    background-color: #064e3b !important; /* emerald-900 */
+}
+
+.dark .cell.disabled input,
+.dark .cell.bg-emerald-100 input,
+.dark .cell.bg-emerald-50 input {
+    color: #6ee7b7 !important; /* emerald-300 */
 }
 
 /* Difficulty Button Active State */

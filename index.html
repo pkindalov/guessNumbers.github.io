@@ -6,36 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the Numbers - Modern Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="./styles/guessNumbers.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
+    <button id="themeToggle" class="fixed top-6 right-6 p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg hover:scale-110 transition-all z-50">
+        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 16.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+        </svg>
+        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+    </button>
+    <div class="max-w-2xl w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 transition-colors duration-300">
         <header id="gameTittle" class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold text-indigo-600 tracking-tight">Guess the Numbers</h1>
-            <p class="text-slate-500 mt-2">Fill the grid to satisfy all equations.</p>
+            <h1 class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tight">Guess the Numbers</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">Fill the grid to satisfy all equations.</p>
         </header>
 
         <main id="gameContainer" class="relative">
             <div id="numbersTable" class="grid grid-cols-7 gap-2 md:gap-4 mb-8">
                 <!-- Row 1 -->
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="firstRowFirstNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="24">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="firstRowFirstNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="24">
                 </div>
-                <div class="flex items-center justify-center text-2xl font-bold text-slate-400" id="firstRowSecColDelete">:</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="flex items-center justify-center text-2xl font-bold text-slate-400 dark:text-slate-600" id="firstRowSecColDelete">:</div>
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="firstRowSecNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="4">
                 </div>
-                <div class="flex items-center justify-center text-2xl font-bold text-slate-400" id="firstRowFourColAddition">+</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="flex items-center justify-center text-2xl font-bold text-slate-400 dark:text-slate-600" id="firstRowFourColAddition">+</div>
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="firstRowThirdNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="7">
                 </div>
-                <div class="flex items-center justify-center text-2xl font-bold text-slate-400" id="firstRowEqualSign">=</div>
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="firstRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="13">
+                <div class="flex items-center justify-center text-2xl font-bold text-slate-400 dark:text-slate-600" id="firstRowEqualSign">=</div>
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="firstRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="13">
                 </div>
 
                 <!-- Row 2 (Operators) -->
@@ -48,20 +62,20 @@
                 <div></div>
 
                 <!-- Row 3 -->
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="thirdRowFirstNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="8">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">+</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="thirdRowSecNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="9">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">-</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="thirdRowThirdNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="2">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">=</div>
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="thirdRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="15">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="thirdRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="15">
                 </div>
 
                 <!-- Row 4 (Operators) -->
@@ -74,20 +88,20 @@
                 <div></div>
 
                 <!-- Row 5 -->
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="fifthRowFirstNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="5">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">*</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="fifthRowSecNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="6">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">:</div>
-                <div class="cell bg-slate-100 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
+                <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
                     <input id="fifthRowThirdNum" type="number" disabled class="w-full bg-transparent text-center font-semibold outline-none" value="3">
                 </div>
                 <div class="flex items-center justify-center text-2xl font-bold text-slate-400">=</div>
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="fifthRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="10">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="fifthRowTotalNum" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="10">
                 </div>
 
                 <!-- Row 6 (Equals) -->
@@ -100,16 +114,16 @@
                 <div></div>
 
                 <!-- Row 7 (Vertical Totals) -->
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="verticalTotalOne" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="15">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="verticalTotalOne" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="15">
                 </div>
                 <div></div>
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="verticalTotalTwo" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="6">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="verticalTotalTwo" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="6">
                 </div>
                 <div></div>
-                <div class="cell bg-emerald-100 rounded-lg p-1 flex items-center justify-center">
-                    <input id="verticalTotalThree" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 outline-none" value="13">
+                <div class="cell bg-emerald-100 dark:bg-emerald-900/30 rounded-lg p-1 flex items-center justify-center">
+                    <input id="verticalTotalThree" type="number" disabled class="w-full bg-transparent text-center font-bold text-emerald-800 dark:text-emerald-300 outline-none" value="13">
                 </div>
                 <div></div>
                 <div></div>
@@ -119,11 +133,33 @@
         </main>
 
         <section id="difficultyContainer" class="mb-8 text-center">
-            <h5 class="text-lg font-semibold text-slate-700 mb-4">Select Difficulty</h5>
+            <h5 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-4">Select Difficulty</h5>
             <div class="flex justify-center gap-3">
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 text-slate-600 hover:bg-slate-300 active-difficulty" data-difficulty="easy">Easy</button>
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 text-slate-600 hover:bg-slate-300" data-difficulty="medium">Medium</button>
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 text-slate-600 hover:bg-slate-300" data-difficulty="hard">Hard</button>
+                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600 active-difficulty" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="hard">Hard</button>
+            </div>
+        </section>
+
+        <section id="statsContainer" class="mb-8 text-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700">
+            <h5 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Your Progress</h5>
+            <div class="flex justify-around text-center">
+                <div>
+                    <span id="totalWins" class="block text-2xl font-black text-indigo-500">0</span>
+                    <span class="text-xs text-slate-500 uppercase">Wins</span>
+                </div>
+                <div>
+                    <span id="easyWins" class="block text-2xl font-black text-emerald-500">0</span>
+                    <span class="text-xs text-slate-500 uppercase">Easy</span>
+                </div>
+                <div>
+                    <span id="medWins" class="block text-2xl font-black text-amber-500">0</span>
+                    <span class="text-xs text-slate-500 uppercase">Med</span>
+                </div>
+                <div>
+                    <span id="hardWins" class="block text-2xl font-black text-rose-500">0</span>
+                    <span class="text-xs text-slate-500 uppercase">Hard</span>
+                </div>
             </div>
         </section>
 

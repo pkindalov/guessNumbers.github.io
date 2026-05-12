@@ -6,7 +6,8 @@ import {
     genDividableTriplet,
     genFifthRowTriplet,
     generateFirstRowNum,
-    generateCompleteGrid
+    generateCompleteGrid,
+    isLineCorrect
 } from '../scripts/gameLogic.js';
 
 describe('Game Logic Tests - Extended', () => {
@@ -99,5 +100,37 @@ describe('Game Logic Tests - Extended', () => {
         expect(allNums.every(n => n > 0 && n <= 100)).toBe(true);
         expect(checkFieldsRepeatNums(matrix)).toBe(true);
         expect(checkForNegativeResultsAndZeroes(matrix)).toBe(true);
+    });
+
+    test('isLineCorrect validates rows correctly', () => {
+        const matrix = Array(7).fill(null).map(() => Array(7).fill(0));
+        // Row 0: (a / b) + c = total
+        matrix[0][0] = 10; matrix[0][2] = 2; matrix[0][4] = 5; matrix[0][6] = 10;
+        expect(isLineCorrect(matrix, 'row', 0)).toBe(true);
+        matrix[0][6] = 11;
+        expect(isLineCorrect(matrix, 'row', 0)).toBe(false);
+
+        // Row 2: a + b - c = total
+        matrix[2][0] = 10; matrix[2][2] = 5; matrix[2][4] = 3; matrix[2][6] = 12;
+        expect(isLineCorrect(matrix, 'row', 2)).toBe(true);
+
+        // Row 4: (a * b) / c = total
+        matrix[4][0] = 6; matrix[4][2] = 4; matrix[4][4] = 8; matrix[4][6] = 3;
+        expect(isLineCorrect(matrix, 'row', 4)).toBe(true);
+    });
+
+    test('isLineCorrect validates columns correctly', () => {
+        const matrix = Array(7).fill(null).map(() => Array(7).fill(0));
+        // Col 0: (a / b) * c = total
+        matrix[0][0] = 20; matrix[2][0] = 4; matrix[4][0] = 2; matrix[6][0] = 10;
+        expect(isLineCorrect(matrix, 'col', 0)).toBe(true);
+
+        // Col 2: (a * b) / c = total
+        matrix[0][2] = 5; matrix[2][2] = 6; matrix[4][2] = 3; matrix[6][2] = 10;
+        expect(isLineCorrect(matrix, 'col', 2)).toBe(true);
+
+        // Col 4: a + (b * c) = total
+        matrix[0][4] = 5; matrix[2][4] = 2; matrix[4][4] = 3; matrix[6][4] = 11;
+        expect(isLineCorrect(matrix, 'col', 4)).toBe(true);
     });
 });
