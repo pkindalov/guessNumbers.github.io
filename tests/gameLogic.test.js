@@ -69,12 +69,11 @@ describe('Game Logic Tests - Extended', () => {
         expect(d).not.toBe(0);
     });
 
-    test('generateFirstRowNum respects maxRange', () => {
-        const available = [];
+    test('generateFirstRowNum respects available pool', () => {
+        const available = [5, 10, 15, 22];
         const divisor = 5;
-        const result = generateFirstRowNum(available, divisor, 100);
-        expect(result % divisor).toBe(0);
-        expect(result).toBeLessThanOrEqual(100);
+        const result = generateFirstRowNum(available, divisor);
+        expect([5, 10, 15]).toContain(result);
     });
 
     test('calculateTotals computes correct values for larger numbers', () => {

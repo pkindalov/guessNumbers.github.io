@@ -23,13 +23,14 @@ export const genDividableTriplet = (availableNums) => {
         const n2 = nums[Math.floor(Math.random() * nums.length)];
         const d = nums[Math.floor(Math.random() * nums.length)];
 
-        if (d !== 0 && d !== n1 && d !== n2 && (n1 * n2) % d === 0) {
+        // Ensure unique and mathematically valid
+        if (n1 !== n2 && n1 !== d && n2 !== d && (n1 * n2) % d === 0) {
             const res = (n1 * n2) / d;
             if (res > 0 && res <= 100) return [n1, n2, d];
         }
         cyclesCounter++;
     }
-    return [4, 5, 2]; 
+    return null; 
 };
 
 export const genFifthRowTriplet = (availableNums, knownNum2) => {
@@ -40,26 +41,21 @@ export const genFifthRowTriplet = (availableNums, knownNum2) => {
         const n1 = nums[Math.floor(Math.random() * nums.length)];
         const d = nums[Math.floor(Math.random() * nums.length)];
 
-        if (d !== 0 && d !== n1 && d !== knownNum2 && (n1 * knownNum2) % d === 0) {
+        if (d !== n1 && d !== knownNum2 && n1 !== knownNum2 && (n1 * knownNum2) % d === 0) {
             const res = (n1 * knownNum2) / d;
             if (res > 0 && res <= 100) return [n1, knownNum2, d];
         }
         cyclesCounter++;
     }
-    return [2, knownNum2, 1];
+    return null;
 };
 
-export const generateFirstRowNum = (availableNums, divisor, maxRange = 50) => {
-    let counter = 0;
-    while (counter < 200) {
-        const randomNumber = Math.floor(Math.random() * maxRange) + 1;
-        if (randomNumber % divisor === 0 && !availableNums.includes(randomNumber)) {
-            const res = randomNumber / divisor;
-            if (res > 0 && res <= 100) return randomNumber;
-        }
-        counter++;
+export const generateFirstRowNum = (availableNums, divisor) => {
+    const candidates = availableNums.filter(n => n % divisor === 0 && (n / divisor) > 0);
+    if (candidates.length > 0) {
+        return candidates[Math.floor(Math.random() * candidates.length)];
     }
-    return divisor * 2;
+    return null;
 };
 
 export const generateThirdRowFirstCell = (availableNums, total) => {
@@ -67,13 +63,12 @@ export const generateThirdRowFirstCell = (availableNums, total) => {
     if (divisors.length > 0) {
         return divisors[Math.floor(Math.random() * divisors.length)];
     }
-    return availableNums[0] || 1;
+    return null;
 };
 
 export const restCellsRndNumGen = (availableNums) => {
-    const pool = availableNums.filter(n => n <= 10);
-    const finalPool = pool.length > 0 ? pool : availableNums;
-    return finalPool[Math.floor(Math.random() * finalPool.length)];
+    if (availableNums.length === 0) return null;
+    return availableNums[Math.floor(Math.random() * availableNums.length)];
 };
 
 export const checkFieldsRepeatNums = (gameMatrix) => {
@@ -82,7 +77,9 @@ export const checkFieldsRepeatNums = (gameMatrix) => {
         gameMatrix[2][0], gameMatrix[2][2], gameMatrix[2][4],
         gameMatrix[4][0], gameMatrix[4][2], gameMatrix[4][4]
     ];
-    return new Set(nums).size === nums.length;
+    // Check for duplicates and that all numbers are valid
+    const validNums = nums.filter(n => typeof n === 'number' && n > 0);
+    return new Set(validNums).size === 9;
 };
 
 export const checkForNegativeResultsAndZeroes = (gameMatrix) => {
@@ -128,32 +125,42 @@ export const generateCompleteGrid = (maxInputRange = 20) => {
 
     const availablePool = Array.from({length: maxInputRange}, (_, i) => i + 1);
 
-    while (retryCount < 2000) {
+    while (retryCount < 5000) {
         const matrix = JSON.parse(JSON.stringify(initialMatrix));
         let availableNums = [...availablePool];
 
+        // Step 1: Middle column (dividable triplet)
         const triplet1 = genDividableTriplet(availableNums);
+        if (!triplet1) { retryCount++; continue; }
         matrix[0][2] = triplet1[0];
         matrix[2][2] = triplet1[1];
         matrix[4][2] = triplet1[2];
         availableNums = availableNums.filter(n => !triplet1.includes(n));
 
-        matrix[0][0] = generateFirstRowNum(availableNums, matrix[0][2], 100);
-        // matrix[0][0] might not be in availableNums if it came from fallback
+        // Step 2: First cell (must be divisible by matrix[0][2])
+        matrix[0][0] = generateFirstRowNum(availableNums, matrix[0][2]);
+        if (!matrix[0][0]) { retryCount++; continue; }
         availableNums = availableNums.filter(n => n !== matrix[0][0]);
 
+        // Step 3: Column 1 dependent cell
         matrix[2][0] = generateThirdRowFirstCell(availableNums, matrix[0][0]);
+        if (!matrix[2][0]) { retryCount++; continue; }
         availableNums = availableNums.filter(n => n !== matrix[2][0]);
 
+        // Step 4: Row 5 / Col 1 dependent cells
         const triplet2 = genFifthRowTriplet(availableNums, matrix[4][2]);
+        if (!triplet2) { retryCount++; continue; }
         matrix[4][0] = triplet2[0];
         matrix[4][4] = triplet2[2];
         availableNums = availableNums.filter(n => n !== matrix[4][0] && n !== matrix[4][4]);
 
+        // Step 5: Remaining cells
         matrix[0][4] = restCellsRndNumGen(availableNums);
+        if (!matrix[0][4]) { retryCount++; continue; }
         availableNums = availableNums.filter(n => n !== matrix[0][4]);
 
         matrix[2][4] = restCellsRndNumGen(availableNums);
+        if (!matrix[2][4]) { retryCount++; continue; }
         availableNums = availableNums.filter(n => n !== matrix[2][4]);
 
         const finalMatrix = calculateTotals(matrix);
