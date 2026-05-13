@@ -19,44 +19,49 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
-    <button id="themeToggle" class="fixed top-6 right-6 p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg hover:scale-110 transition-all z-50">
-        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 16.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-        </svg>
-        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-    </button>
+    <div class="fixed top-6 right-6 flex gap-2">
+        <button id="langToggle" class="p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg hover:scale-110 transition-all z-50 flex items-center justify-center font-bold text-xs w-12 h-12">
+            BG
+        </button>
+        <button id="themeToggle" class="p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg hover:scale-110 transition-all z-50">
+            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 16.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+    </div>
     <div class="max-w-2xl w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 transition-colors duration-300">
         <header id="gameTittle" class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tight">Guess the Numbers</h1>
-            <p class="text-slate-500 dark:text-slate-400 mt-2">Fill the grid to satisfy all equations.</p>
+            <h1 data-i18n="title" class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tight">Guess the Numbers</h1>
+            <p data-i18n="subtitle" class="text-slate-500 dark:text-slate-400 mt-2">Fill the grid to satisfy all equations.</p>
             
             <button id="rulesToggle" class="mt-4 text-sm font-semibold text-indigo-500 hover:text-indigo-600 flex items-center gap-1 mx-auto transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                 </svg>
-                How to Play
+                <span data-i18n="howToPlay">How to Play</span>
             </button>
 
             <div id="rulesSection" class="hidden mt-4 text-left bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/30 text-sm">
-                <h3 class="font-bold text-indigo-900 dark:text-indigo-300 mb-2">Game Rules:</h3>
+                <h3 data-i18n="rulesTitle" class="font-bold text-indigo-900 dark:text-indigo-300 mb-2">Game Rules:</h3>
                 <ul class="space-y-1 text-indigo-800 dark:text-indigo-400 list-disc list-inside">
-                    <li>Fill the <span class="font-bold">purple-bordered</span> cells.</li>
-                    <li>Each number in the grid must be <span class="font-bold">unique</span>.</li>
-                    <li>Numbers must be within the difficulty range:
-                        <ul class="ml-5 mt-1 list-[circle] list-inside">
-                            <li>Easy: 1-10</li>
-                            <li>Medium: 1-20</li>
-                            <li>Hard: 1-50</li>
-                        </ul>
-                    </li>
-                    <li>Satisfy all 6 equations (rows & columns) to win.</li>
+                    <li data-i18n="rule1">Fill the <span class="font-bold">purple-bordered</span> cells.</li>
+                    <li data-i18n="rule2">Each number in the grid must be <span class="font-bold">unique</span>.</li>
+                    <li data-i18n="rule3">Numbers must be within the difficulty range:</li>
+                    <ul class="ml-10 list-[circle] list-inside text-indigo-700 dark:text-indigo-400">
+                        <li data-i18n="ruleEasy">Easy: 1-10</li>
+                        <li data-i18n="ruleMedium">Medium: 1-20</li>
+                        <li data-i18n="ruleHard">Hard: 1-50</li>
+                    </ul>
+                    <li data-i18n="rule4">Satisfy all 6 equations (rows & columns) to win.</li>
                 </ul>
             </div>
         </header>
 
         <main id="gameContainer" class="relative">
+            <!-- Grid content ... -->
             <div id="numbersTable" class="grid grid-cols-7 gap-2 md:gap-4 mb-8">
                 <!-- Row 1 -->
                 <div class="cell bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex items-center justify-center border-2 border-transparent transition-all">
@@ -152,36 +157,36 @@
                 <div></div>
             </div>
 
-            <summary class="block text-sm text-slate-400 mb-6 italic text-center">Above is an example of a correctly filled grid.</summary>
+            <summary data-i18n="exampleText" class="block text-sm text-slate-400 mb-6 italic text-center">Above is an example of a correctly filled grid.</summary>
         </main>
 
         <section id="difficultyContainer" class="mb-8 text-center">
-            <h5 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-4">Select Difficulty</h5>
+            <h5 data-i18n="selectDifficulty" class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-4">Select Difficulty</h5>
             <div class="flex justify-center gap-3">
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600 active-difficulty" data-difficulty="easy">Easy</button>
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="medium">Medium</button>
-                <button class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="hard">Hard</button>
+                <button data-i18n="difficultyEasy" class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600 active-difficulty" data-difficulty="easy">Easy</button>
+                <button data-i18n="difficultyMedium" class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="medium">Medium</button>
+                <button data-i18n="difficultyHard" class="difficulty-btn px-6 py-2 rounded-full font-medium transition-all bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600" data-difficulty="hard">Hard</button>
             </div>
         </section>
 
         <section id="statsContainer" class="mb-8 text-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-700">
-            <h5 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Your Progress</h5>
+            <h5 data-i18n="yourProgress" class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Your Progress</h5>
             <div class="flex justify-around text-center">
                 <div>
                     <span id="totalWins" class="block text-2xl font-black text-indigo-500">0</span>
-                    <span class="text-xs text-slate-500 uppercase">Wins</span>
+                    <span data-i18n="statsWins" class="text-xs text-slate-500 uppercase">Wins</span>
                 </div>
                 <div>
                     <span id="easyWins" class="block text-2xl font-black text-emerald-500">0</span>
-                    <span class="text-xs text-slate-500 uppercase">Easy</span>
+                    <span data-i18n="statsEasy" class="text-xs text-slate-500 uppercase">Easy</span>
                 </div>
                 <div>
                     <span id="medWins" class="block text-2xl font-black text-amber-500">0</span>
-                    <span class="text-xs text-slate-500 uppercase">Med</span>
+                    <span data-i18n="statsMed" class="text-xs text-slate-500 uppercase">Med</span>
                 </div>
                 <div>
                     <span id="hardWins" class="block text-2xl font-black text-rose-500">0</span>
-                    <span class="text-xs text-slate-500 uppercase">Hard</span>
+                    <span data-i18n="statsHard" class="text-xs text-slate-500 uppercase">Hard</span>
                 </div>
             </div>
         </section>
@@ -190,13 +195,13 @@
 
         <footer class="flex justify-center">
             <button id="startGame" class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                Start Game
+                <span data-i18n="startGame">Start Game</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
             </button>
             <button id="sendResult" class="hidden px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                Check Results
+                <span data-i18n="checkResults">Check Results</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>

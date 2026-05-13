@@ -5,9 +5,11 @@
 
 import { generateCompleteGrid, isLineCorrect } from './gameLogic.js';
 import { saveGameState, loadGameState, clearGameState, updateStats, loadStats } from './storage.js';
+import { translations } from './translations.js';
 
 const gameState = {
     difficulty: 'easy',
+    language: localStorage.getItem('language') || 'en',
     errors: {
         ids: []
     },
@@ -25,6 +27,31 @@ const gameState = {
     gameMatrix: [],
     userMatrix: Array(7).fill(null).map(() => Array(7).fill(0))
 };
+
+/**
+ * Updates the UI language based on current gameState.
+ */
+const updateLanguageUI = () => {
+    const langData = translations[gameState.language];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (langData[key]) el.textContent = langData[key];
+    });
+    document.getElementById('langToggle').textContent = gameState.language === 'en' ? 'BG' : 'EN';
+};
+
+const toggleLanguage = () => {
+    gameState.language = gameState.language === 'en' ? 'bg' : 'en';
+    localStorage.setItem('language', gameState.language);
+    updateLanguageUI();
+    
+    // Update rules toggle text if visible
+    const isRulesVisible = !rulesSection.classList.contains('hidden');
+    const langData = translations[gameState.language];
+    rulesToggle.querySelector('[data-i18n="howToPlay"]').textContent = isRulesVisible ? langData.hideRules : langData.howToPlay;
+};
+
+document.getElementById('langToggle').addEventListener('click', toggleLanguage);
 
 const displayStats = () => {
     const stats = loadStats();
@@ -49,13 +76,17 @@ const rulesSection = document.getElementById('rulesSection');
 const toggleRules = () => {
     rulesSection.classList.toggle('hidden');
     const isVisible = !rulesSection.classList.contains('hidden');
+    const langData = translations[gameState.language];
+    
+    const label = isVisible ? langData.hideRules : langData.howToPlay;
+    
     rulesToggle.innerHTML = isVisible ? 
         `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-        </svg> Hide Rules` : 
+        </svg> <span data-i18n="howToPlay">${label}</span>` : 
         `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-        </svg> How to Play`;
+        </svg> <span data-i18n="howToPlay">${label}</span>`;
 };
 
 rulesToggle.addEventListener('click', toggleRules);
@@ -213,8 +244,11 @@ const checkUserInputs = () => {
     });
 
     const errorContainer = document.getElementById('errorsContainer');
+    const langData = translations[gameState.language];
+
     if (gameState.errors.ids.length > 0) {
-        errorContainer.innerHTML = `<p class="errors text-red-500 font-bold">You have <span class="errorSpan bg-red-100 px-2 rounded">${gameState.errors.ids.length}</span> errors</p>`;
+        const errorMsg = langData.errorsFound.replace('{n}', gameState.errors.ids.length);
+        errorContainer.innerHTML = `<p class="errors text-red-500 font-bold">${errorMsg}</p>`;
     } else {
         updateStats(gameState.difficulty);
         clearGameState();
@@ -224,14 +258,14 @@ const checkUserInputs = () => {
             <div id="congratImageCont" class="text-center py-8">
                 <img src="images/congratulations.gif" alt="you won image" class="mx-auto rounded-lg shadow-lg mb-6 max-w-full h-auto" />
                 <button id="restart" class="px-8 py-3 bg-emerald-600 text-white font-bold rounded-xl shadow-lg hover:bg-emerald-700 transition-all flex items-center gap-2 mx-auto">
-                    Play Again
+                    ${langData.restart}
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>`;
         document.getElementById('restart').onclick = () => window.location.reload();
-        document.getElementById('gameTittle').innerHTML = '<h1 class="text-4xl font-extrabold text-emerald-600 tracking-tight">Congratulations! You won!</h1>';
+        document.getElementById('gameTittle').innerHTML = `<h1 class="text-4xl font-extrabold text-emerald-600 tracking-tight">${langData.winTitle}</h1>`;
         sendBtn.classList.add('hidden');
         
         // Trigger Confetti
@@ -278,6 +312,7 @@ const startGame = (restoredData = null) => {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
+    updateLanguageUI();
     displayStats();
     // Theme initialization
     const theme = localStorage.getItem('theme') || 'light';
@@ -289,7 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const saved = loadGameState();
     if (saved) {
-        if (confirm('A saved game was found. Would you like to continue?')) {
+        const langData = translations[gameState.language];
+        if (confirm(langData.savedGamePrompt)) {
             startGame(saved);
         } else {
             clearGameState();
